@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_bar_background_color">#00c6ff</color>
+    <color name="app_bar_title_text_color">#ffffff</color>.
+    <color name="app_bar_menu_background_color">#ffffff</color>
+    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorAccent">#ff4081</color>
+    <color name="colorPrimary">#ff4081</color>
+    <color name="notification_text_color">#ffffff</color>
+</resources>
