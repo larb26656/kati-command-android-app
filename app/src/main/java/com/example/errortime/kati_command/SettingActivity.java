@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.w3c.dom.Text;
 
@@ -19,6 +22,7 @@ import java.util.regex.Pattern;
 
 
 public class SettingActivity extends AppCompatActivity {
+    private EditText token_text;
     private EditText ipaddress_text;
     private SharedPreferences sp;
     private Button submit_button;
@@ -31,6 +35,18 @@ public class SettingActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ipaddress_text = (EditText) findViewById(R.id.ipaddress_text);
         ipaddress_inputlayout = (TextInputLayout) findViewById(R.id.ipaddress_inputlayout);
+        token_text = (EditText) findViewById(R.id.token_text);
+        set_token_text();
+        Button copy_token__button = (Button) findViewById(R.id.copy_token_button);
+        copy_token__button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                clipboard.setText(token_text.getText());
+                Toast.makeText(getApplicationContext(),
+                        R.string.warning_copy_name, Toast.LENGTH_LONG).show();
+            }
+        });
         sp = getSharedPreferences("PREF_SETTING", Context.MODE_PRIVATE);
         String default_ip = sp.getString("setting_ip_address", "127.0.0.1");
         ipaddress_text.setText(default_ip);
@@ -55,17 +71,24 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-        private static boolean is_ip_v4(String ipaddress) {
-            if (ipaddress == null) {
-                return false;
-            }
-            String ip = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
-                    + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
-                    + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
-                    + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
-            Pattern pattern = Pattern.compile(ip);
-            Matcher matcher = pattern.matcher(ipaddress);
-            return matcher.matches();
+    private void set_token_text(){
+        String token = FirebaseInstanceId.getInstance().getToken();
+        token_text.setText(token);
+        Log.d("myTag", token);
+
+    }
+
+    private static boolean is_ip_v4(String ipaddress) {
+        if (ipaddress == null) {
+            return false;
         }
+        String ip = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
+                + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+                + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+                + "(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+        Pattern pattern = Pattern.compile(ip);
+        Matcher matcher = pattern.matcher(ipaddress);
+        return matcher.matches();
+    }
 
 }

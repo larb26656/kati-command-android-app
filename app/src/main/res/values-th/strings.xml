@@ -14,4 +14,11 @@
     <string name="memo_desc_is_blank">กรอกข้อความ*</string>
     <string name="time_is_blank">เลือกเวลา*</string>
     <string name="cant_connect_server">ไม่สามารถเชื่อมต่อเซิฟเวอร์ได้*</string>
+    <string name="token_label_name">โทเค่น</string>
+    <string name="copy_button_name">คัดลอก</string>
+    <string name="warning_copy_name">คัดลอกไปยังคลิปบอร์ดแล้ว!</string>
+    <string name="message_title_label">ข้อความ</string>
+    <string name="pill_title_label">ยา</string>
+    <string name="behavior_title_label">พฤติกรรมผู้ป่วย</string>
+    <string name="lang_label">thai</string>
 </resources>

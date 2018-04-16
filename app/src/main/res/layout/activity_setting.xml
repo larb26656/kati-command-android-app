@@ -25,6 +25,37 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/token_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/app_bar"
+                android:layout_marginTop="10dp"
+                android:text="@string/token_label_name" />
+
+            <EditText
+                android:id="@+id/token_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/token_label"
+                android:clickable="false"
+                android:editable="false"
+                android:ems="10"
+                android:focusable="false"
+                android:inputType="textMultiLine"
+                android:gravity="top"
+                android:lines="6"
+                android:maxLines="6"
+                android:minLines="6"/>
+
+            <Button
+                android:id="@+id/copy_token_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/token_label"
+                android:layout_toRightOf="@+id/token_text"
+                android:text="@string/copy_button_name" />
+
+            <TextView
                 android:id="@+id/ipaddress_label"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -57,6 +88,7 @@
                 android:layout_toRightOf="@+id/ipaddress_text"
                 android:layout_weight="1"
                 android:text="@string/submit_button_name" />
+
         </LinearLayout>
     </ScrollView>
 

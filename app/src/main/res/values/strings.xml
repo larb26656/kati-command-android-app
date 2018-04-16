@@ -1,17 +1,24 @@
 <resources>
     <string name="app_name">พูดกับกะทิ</string>
     <string name="settings_name">ตั้งค่า</string>
-    <string name="submit_button_name">บันทึก</string>
     <string name="ip_address_label_name">ไอพีแอดเดรส</string>
+    <string name="ip_address_format_error">รูปแบบไอพีผิด*</string>
     <string name="warning_saved_success_name">บันทึกสำเร็จ!</string>
     <string name="warning_process">กำลังประมวลผล...</string>
     <string name="warning_send_http_unsuccess">เกิดข้อผิดพลาดระหว่างการส่งคำสั่ง กรุณาตรวจสอบอินเทอร์เน็ตของท่าน หรือไอพีแอดเดรส</string>
+    <string name="submit_button_name">บันทึก</string>
     <string name="memo_label_name">ข้อความ</string>
     <string name="date_label_name">วันที่</string>
     <string name="time_label_name">เวลา</string>
+    <string name="date_is_blank">กรอกวันที่*</string>
     <string name="memo_desc_is_blank">กรอกข้อความ*</string>
-    <string name="date_is_blank">เลือกวันที่*</string>
-    <string name="cant_connect_server">ไม่สามารถเชื่อมต่อเซิฟเวอร์ได้*</string>
     <string name="time_is_blank">เลือกเวลา*</string>
-    <string name="ip_address_format_error">รูปแบบไอพีผิด*</string>
+    <string name="cant_connect_server">ไม่สามารถเชื่อมต่อเซิฟเวอร์ได้*</string>
+    <string name="token_label_name">โทเค่น</string>
+    <string name="copy_button_name">คัดลอก</string>
+    <string name="warning_copy_name">คัดลอกไปยังคลิปบอร์ดแล้ว!</string>
+    <string name="message_title_label">ข้อความ</string>
+    <string name="pill_title_label">ยา</string>
+    <string name="behavior_title_label">พฤติกรรมผู้ป่วย</string>
+    <string name="lang_label">thai</string>
 </resources>

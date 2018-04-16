@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -43,11 +45,13 @@ import okhttp3.Response;
 public class MemoActivity extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName(),default_ip;;
     private SharedPreferences sp;
-    private TextInputLayout memo_desc_inputlayout,date_inputlayout,time_inputlayout;
+    private TextInputLayout date_inputlayout,time_inputlayout;
+    private ImageButton mic_button;
     private EditText memo_desc_edittext,date_edittext;
     private Spinner hours_spinner,minutes_spinner;
     private Calendar myCalendar = Calendar.getInstance();
     private Button submit_button;
+    private final static int REQUEST_VOICE_RECOGNITION = 10001;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo);
@@ -56,10 +60,10 @@ public class MemoActivity extends AppCompatActivity {
         sp = getSharedPreferences("PREF_SETTING", Context.MODE_PRIVATE);
         default_ip = sp.getString("setting_ip_address", "127.0.0.1");
         Intent intent = getIntent();
-        memo_desc_inputlayout = (TextInputLayout) findViewById(R.id.memo_desc_inputlayout);
         date_inputlayout = (TextInputLayout) findViewById(R.id.date_inputlayout);
         time_inputlayout = (TextInputLayout) findViewById(R.id.time_inputlayout);
         memo_desc_edittext = (EditText) findViewById(R.id.memo_desc_edittext);
+        mic_button = (ImageButton) findViewById(R.id.mic_button);
         date_edittext = (EditText) findViewById(R.id.date_edittext);
         hours_spinner = (Spinner) findViewById(R.id.hours_spinner);
         minutes_spinner = (Spinner) findViewById(R.id.minutes_spinner);
@@ -99,13 +103,20 @@ public class MemoActivity extends AppCompatActivity {
             }
 
         });
+        mic_button.setOnClickListener(new View.OnClickListener() {
+
+          @Override
+          public void onClick(View view) {
+              callVoiceRecognition();
+          }
+        });
         submit_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String memodesc = memo_desc_edittext.getText().toString();
                 String memonotificationdate = date_edittext.getText().toString();
                 if(memodesc.equals("")){
-                    memo_desc_inputlayout.setError(getString(R.string.memo_desc_is_blank));
+                    /*memo_desc_inputlayout.setError(getString(R.string.memo_desc_is_blank));*/
                 }
                 if(memonotificationdate.toString().equals("")){
                     date_inputlayout.setError(getString(R.string.date_is_blank));
@@ -127,8 +138,25 @@ public class MemoActivity extends AppCompatActivity {
         default_ip = sp.getString("setting_ip_address", "127.0.0.1");
     }
 
+    private void callVoiceRecognition() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        startActivityForResult(intent, REQUEST_VOICE_RECOGNITION);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_VOICE_RECOGNITION &&
+            resultCode == RESULT_OK &&
+            data != null) {
+            ArrayList<String> resultList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            String text = resultList.get(0);
+            memo_desc_edittext.setText(text);
+        }
+    }
+
     private void set_date() {
-        String myFormat1 = "YYYY-MM-dd"; //In which you need put here
+        String myFormat1 = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat1, Locale.US);
         date_edittext.setText(sdf.format(myCalendar.getTime()));
     }
@@ -169,7 +197,7 @@ public class MemoActivity extends AppCompatActivity {
             protected String doInBackground(Void... voids) {
                 OkHttpClient okHttpClient = new OkHttpClient();
 
-                String url = "http://"+default_ip+"/kati2/api/select_time_picker_hours_memo_by_day_json.php";
+                String url = "http://"+default_ip+"/kati/api/select_time_picker_hours_memo_by_day_json.php";
                 Log.e(TAG, url);
                 RequestBody body = new FormBody.Builder()
                         .add("dayofweek", dayofweek)
@@ -216,7 +244,7 @@ public class MemoActivity extends AppCompatActivity {
             protected String doInBackground(Void... voids) {
                 OkHttpClient okHttpClient = new OkHttpClient();
 
-                String url = "http://"+default_ip+"/kati2/api/select_time_picker_minutes_memo_by_day_json.php";
+                String url = "http://"+default_ip+"/kati/api/select_time_picker_minutes_memo_by_day_json.php";
                 Log.e(TAG, url);
                 RequestBody body = new FormBody.Builder()
                         .add("hours", hours)
@@ -264,7 +292,7 @@ public class MemoActivity extends AppCompatActivity {
             protected String doInBackground(Void... voids) {
                 OkHttpClient okHttpClient = new OkHttpClient();
 
-                String url = "http://"+default_ip+"/kati2/api/insert_memo_by_day.php";
+                String url = "http://"+default_ip+"/kati/api/insert_memo_by_day.php";
                 Log.e(TAG, url);
                 RequestBody body = new FormBody.Builder()
                         .add("Memo_desc", memodesc)

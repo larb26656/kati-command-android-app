@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         mic_button = (ImageButton) findViewById(R.id.mic_button);
         process_textview = (TextView) findViewById(R.id.process_textview);
-        text_input = (EditText) findViewById(R.id.editText);
+        /*text_input = (EditText) findViewById(R.id.editText);*/
         hide_process_text();
         chatMessages = new ArrayList<>();
 
@@ -80,6 +81,13 @@ public class MainActivity extends AppCompatActivity {
         //set ListView adapter first
         adapter = new MessageAdapter(this, R.layout.item_chat_left, chatMessages);
         listView.setAdapter(adapter);
+        mic_button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                callVoiceRecognition();
+            }
+        });
     }
     public void show_process_text(){
         process_textview.setVisibility(View.VISIBLE);
@@ -142,8 +150,7 @@ public class MainActivity extends AppCompatActivity {
             texts=resultList.get(0);
             show_process_text();
             input_chat(texts);
-            //new MainActivity.OkHttpAync().execute(this, "get", "");
-            //respon_chat(getString(R.string.warning_process));
+            sent_command(texts);
         }
     }
     private void sent_command(final String text) {
@@ -151,7 +158,11 @@ public class MainActivity extends AppCompatActivity {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
-                OkHttpClient okHttpClient = new OkHttpClient();
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .writeTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(30, TimeUnit.SECONDS)
+                        .build();
 
                 String url = "http://"+default_ip+":5000/sent?text="+text_input;
                 Log.e(TAG, url);
@@ -182,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onPostExecute(string);
                 if(string.equals("Error")){
                     respon_chat(getString(R.string.warning_send_http_unsuccess));
+                    hide_process_text();
                 }
                 else{
                     String json_respon = (String) string;
@@ -190,12 +202,14 @@ public class MainActivity extends AppCompatActivity {
                         jsonobj = new JSONObject(json_respon);
                         if(jsonobj.getString("type").equals("memo_save")){
                             respon_chat(jsonobj.getString("text"));
+                            hide_process_text();
                             Intent myIntent = new Intent(MainActivity.this, MemoActivity.class);
                             myIntent.putExtra("memo_desc_text", jsonobj.getString("text"));
                             MainActivity.this.startActivity(myIntent);
                         }
                         else{
                             respon_chat(jsonobj.getString("text"));
+                            hide_process_text();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -204,19 +218,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }.execute();
     }
-    public void getHttp(View v) {
-        //instantiate async task which call service using OkHttp in the background
-        // and execute it passing required parameter to it
-    //get http request using okhttp
-    //callVoiceRecognition();
-    //showChangeLangDialog();
-        texts=text_input.getText().toString();
-        input_chat(texts);
-        text_input.setText("");
-        sent_command(texts);
-
-
-}
 
 
   /*  private class OkHttpAync extends AsyncTask<Object, Void, Object> {
