@@ -197,7 +197,7 @@ public class MemoActivity extends AppCompatActivity {
             protected String doInBackground(Void... voids) {
                 OkHttpClient okHttpClient = new OkHttpClient();
 
-                String url = "http://"+default_ip+"/kati/api/select_time_picker_hours_memo_by_day_json.php";
+                String url = "http://"+default_ip+"/api/select_time_picker_hours_memo_by_day_json.php";
                 Log.e(TAG, url);
                 RequestBody body = new FormBody.Builder()
                         .add("dayofweek", dayofweek)
@@ -244,7 +244,7 @@ public class MemoActivity extends AppCompatActivity {
             protected String doInBackground(Void... voids) {
                 OkHttpClient okHttpClient = new OkHttpClient();
 
-                String url = "http://"+default_ip+"/kati/api/select_time_picker_minutes_memo_by_day_json.php";
+                String url = "http://"+default_ip+"/api/select_time_picker_minutes_memo_by_day_json.php";
                 Log.e(TAG, url);
                 RequestBody body = new FormBody.Builder()
                         .add("hours", hours)
@@ -292,7 +292,7 @@ public class MemoActivity extends AppCompatActivity {
             protected String doInBackground(Void... voids) {
                 OkHttpClient okHttpClient = new OkHttpClient();
 
-                String url = "http://"+default_ip+"/kati/api/insert_memo_by_day.php";
+                String url = "http://"+default_ip+"/api/insert_memo_by_day.php";
                 Log.e(TAG, url);
                 RequestBody body = new FormBody.Builder()
                         .add("Memo_desc", memodesc)
